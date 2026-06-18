@@ -58,4 +58,37 @@ class AuthController extends Controller
             default       => '/',
         };
     }
+
+    public function showReset()
+{
+    return view('auth.reset-password');
+}
+
+public function reset(Request $request)
+{
+    $request->validate([
+        'email'        => 'required|email|exists:users,email',
+        'old_password' => 'required',
+        'new_password' => 'required|min:6|confirmed',
+    ], [
+        'email.exists'        => 'Email tidak ditemukan.',
+        'old_password.required' => 'Password lama wajib diisi.',
+        'new_password.min'    => 'Password baru minimal 6 karakter.',
+        'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+    ]);
+
+    $user = \App\Models\User::where('email', $request->email)->first();
+
+    // Cek password lama
+    if (!\Illuminate\Support\Facades\Hash::check($request->old_password, $user->password)) {
+        return back()->withErrors(['old_password' => 'Password lama tidak sesuai.'])->withInput();
+    }
+
+    // Update password
+    $user->update([
+        'password' => \Illuminate\Support\Facades\Hash::make($request->new_password)
+    ]);
+
+    return redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login.');
+}
 }

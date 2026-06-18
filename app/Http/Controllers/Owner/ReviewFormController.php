@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Owner;
 
-use App\Mail\NotifikasiPersetujuan;
-use App\Mail\NotifikasiRevisi;
 use App\Helpers\NotificationHelper;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Projectnote;
@@ -47,7 +44,6 @@ class ReviewFormController extends Controller
             'approved_at' => now(),
         ]);
 
-
         Projectnote::create([
             'project_id' => $project->id,
             'owner_id'   => auth()->id(),
@@ -60,7 +56,8 @@ class ReviewFormController extends Controller
             $project->marketing_id,
             'Proyek Disetujui ✅',
             "Proyek \"{$project->name}\" telah disetujui oleh owner.",
-            'approved'
+            'approved',
+            route('marketing.riwayat.index')
         );
 
         // Notif ke semua admin
@@ -70,7 +67,8 @@ class ReviewFormController extends Controller
                 $admin->id,
                 'Proyek Disetujui',
                 "Owner telah menyetujui proyek \"{$project->name}\".",
-                'approved'
+                'approved',
+                route('admin.monitoring.index')
             );
         }
 
@@ -98,7 +96,8 @@ class ReviewFormController extends Controller
             $project->marketing_id,
             'Proyek Ditolak ❌',
             "Proyek \"{$project->name}\" ditolak. Alasan: {$request->note}",
-            'rejected'
+            'rejected',
+            route('marketing.riwayat.index')
         );
 
         // Notif ke semua admin
@@ -108,7 +107,8 @@ class ReviewFormController extends Controller
                 $admin->id,
                 'Proyek Ditolak',
                 "Owner telah menolak proyek \"{$project->name}\".",
-                'rejected'
+                'rejected',
+                route('admin.monitoring.index')
             );
         }
 
@@ -136,7 +136,8 @@ class ReviewFormController extends Controller
             $project->marketing_id,
             'Proyek Perlu Revisi ⚠️',
             "Proyek \"{$project->name}\" dikembalikan untuk revisi. Catatan: {$request->note}",
-            'revision'
+            'revision',
+            route('marketing.form-revisi.index')
         );
 
         // Notif ke semua admin
@@ -146,7 +147,8 @@ class ReviewFormController extends Controller
                 $admin->id,
                 'Proyek Perlu Revisi',
                 "Owner meminta revisi untuk proyek \"{$project->name}\".",
-                'revision'
+                'revision',
+                route('admin.monitoring.index')
             );
         }
 

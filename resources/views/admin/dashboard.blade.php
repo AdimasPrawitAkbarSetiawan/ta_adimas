@@ -26,7 +26,7 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Total Role</p>
             <p class="text-3xl font-bold text-gray-800">{{ $totalRole }}</p>
-            <span class="text-xs text-purple-500 font-medium mt-2 inline-block">Kelola Role</span>
+             <a href="{{ route('admin.user.index') }}" class="text-xs text-purple-500 font-medium mt-2 inline-block">Kelola Role</a>
         </div>
         <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
             <svg class="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

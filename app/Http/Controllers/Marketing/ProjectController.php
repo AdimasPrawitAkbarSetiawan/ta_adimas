@@ -50,14 +50,15 @@ class ProjectController extends Controller
             'status'          => 'review',
         ]);
 
-        // Kirim email & notifikasi ke semua owner
+        // Notifikasi ke semua owner
         $owners = User::where('role', 'owner')->get();
         foreach ($owners as $owner) {
             NotificationHelper::send(
                 $owner->id,
                 'Form Pengajuan Baru 📋',
                 "Marketing \"{$project->marketing->name}\" mengajukan proyek \"{$project->name}\" untuk direview.",
-                'review'
+                'review',
+                route('owner.form-pengajuan.index')
             );
         }
 
@@ -68,7 +69,8 @@ class ProjectController extends Controller
                 $admin->id,
                 'Form Pengajuan Baru',
                 "Proyek \"{$project->name}\" telah diajukan oleh marketing dan menunggu review owner.",
-                'review'
+                'review',
+                route('admin.monitoring.index')
             );
         }
 
@@ -122,7 +124,8 @@ class ProjectController extends Controller
                 $owner->id,
                 'Form Revisi Dikirim Kembali 🔄',
                 "Marketing telah mengirim kembali proyek \"{$project->name}\" setelah revisi untuk direview ulang.",
-                'review'
+                'review',
+                route('owner.form-pengajuan.index')
             );
         }
 
@@ -133,7 +136,8 @@ class ProjectController extends Controller
                 $admin->id,
                 'Form Revisi Dikirim Kembali',
                 "Proyek \"{$project->name}\" telah dikirim kembali setelah revisi.",
-                'review'
+                'review',
+                route('admin.monitoring.index')
             );
         }
 

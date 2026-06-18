@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\SettingController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/',       [AuthController::class, 'showLogin'])->name('login');
+    Route::get('/reset-password', [AuthController::class, 'showReset'])->name('reset.show')->middleware('guest');
+    Route::post('/reset-password', [AuthController::class, 'reset'])->name('reset.post')->middleware('guest');
     Route::get('/login',  [AuthController::class, 'showLogin']);
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
@@ -26,10 +28,16 @@ Route::middleware(['auth', 'role:admin'])
     Route::resource('user', UserController::class)->except(['show']);
     Route::get('/monitoring', [\App\Http\Controllers\Admin\MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/monitoring/{project}', [\App\Http\Controllers\Admin\MonitoringController::class, 'show'])->name('monitoring.show');
-    Route::get('/settings',         [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings/logo',   [SettingController::class, 'updateLogo'])->name('settings.logo');
-    Route::post('/settings/backup', [SettingController::class, 'backupDatabase'])->name('settings.backup');
-    Route::post('/settings/backup-source', [SettingController::class, 'backupSourceCode'])->name('settings.backup-source');
+
+    // Settings
+    Route::get('/settings',              [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings',             [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings/logo',        [SettingController::class, 'updateLogo'])->name('settings.logo');
+
+    // Backup (halaman terpisah)
+    Route::get('/backup',                [SettingController::class, 'backupIndex'])->name('backup.index');
+    Route::post('/backup/database',      [SettingController::class, 'backupDatabase'])->name('settings.backup');
+    Route::post('/backup/source',        [SettingController::class, 'backupSourceCode'])->name('settings.backup-source');
 });
 
 Route::middleware(['auth', 'role:owner'])
@@ -46,7 +54,14 @@ Route::middleware(['auth', 'role:owner'])
     Route::get('/monitoring', [\App\Http\Controllers\Owner\MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/monitoring/{project}', [\App\Http\Controllers\Owner\MonitoringController::class, 'show'])->name('monitoring.show');
     Route::get('/riwayat-keputusan', [\App\Http\Controllers\Owner\RiwayatKeputusanController::class, 'index'])->name('riwayat-keputusan.index');
-Route::get('/riwayat-keputusan/{project}', [\App\Http\Controllers\Owner\RiwayatKeputusanController::class, 'show'])->name('riwayat-keputusan.show');
+    Route::get('/riwayat-keputusan/{project}', [\App\Http\Controllers\Owner\RiwayatKeputusanController::class, 'show'])->name('riwayat-keputusan.show');
+    Route::get('/kebutuhan/{project}',         [\App\Http\Controllers\Owner\KebutuhanController::class, 'show'])->name('kebutuhan.show');
+Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
+Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
+Route::get('/kebutuhan',                    [\App\Http\Controllers\Owner\KebutuhanController::class, 'index'])->name('kebutuhan.index');
+Route::get('/kebutuhan/{project}',          [\App\Http\Controllers\Owner\KebutuhanController::class, 'show'])->name('kebutuhan.show');
+Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
+Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
 });
 
 Route::middleware(['auth', 'role:marketing'])

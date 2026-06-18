@@ -10,7 +10,7 @@ class MonitoringController extends Controller
     public function index()
     {
         $projects = Project::with(['klien.user', 'marketing', 'latestProgress'])
-                           ->whereIn('status', ['approved', 'in_progress', 'completed'])
+                           ->whereIn('status', ['approved', 'pending_detail', 'in_progress', 'completed'])
                            ->orderBy('created_at', 'desc')
                            ->get();
 

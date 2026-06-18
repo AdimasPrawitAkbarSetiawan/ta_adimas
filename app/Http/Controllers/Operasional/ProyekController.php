@@ -9,22 +9,22 @@ use Illuminate\Http\Request;
 
 class ProyekController extends Controller
 {
-    public function disetujui()
-    {
-        $daftar = Project::with(['klien.user', 'marketing'])
-                         ->where('status', 'approved')
-                         ->orderBy('created_at', 'desc')
-                         ->get();
+public function disetujui()
+{
+    $daftar = Project::with(['klien.user', 'marketing'])
+                     ->whereIn('status', ['approved', 'pending_detail'])
+                     ->orderBy('created_at', 'desc')
+                     ->get();
 
-        return view('operasional.proyek-disetujui', compact('daftar'));
-    }
+    return view('operasional.proyek-disetujui', compact('daftar'));
+}
 
     public function berjalan()
     {
         $daftar = Project::with(['klien.user', 'marketing'])
-                         ->where('status', 'in_progress')
-                         ->orderBy('created_at', 'desc')
-                         ->get();
+            ->where('status', 'in_progress')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('operasional.proyek-berjalan', compact('daftar'));
     }
@@ -87,9 +87,34 @@ class ProyekController extends Controller
             ]
         );
 
-        $project->update(['status' => 'in_progress']);
+        // Status jadi pending_detail, menunggu review owner
+        $project->update(['status' => 'pending_detail']);
 
-        return redirect()->route('operasional.proyek-berjalan.index')
-                         ->with('sukses', 'Kebutuhan proyek berhasil disimpan.');
+        // Notif ke semua owner
+        $owners = \App\Models\User::where('role', 'owner')->get();
+        foreach ($owners as $owner) {
+            \App\Helpers\NotificationHelper::send(
+                $owner->id,
+                'Kebutuhan Proyek Menunggu Review 📋',
+                "Operasional telah mengisi kebutuhan proyek \"{$project->name}\". Silakan review.",
+                'pending_detail',
+                route('owner.kebutuhan.show', $project->id)
+            );
+        }
+
+        // Notif ke admin
+        $admins = \App\Models\User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            \App\Helpers\NotificationHelper::send(
+                $admin->id,
+                'Kebutuhan Proyek Diisi',
+                "Operasional telah mengisi kebutuhan proyek \"{$project->name}\" dan menunggu review owner.",
+                'pending_detail',
+                route('admin.monitoring.index')
+            );
+        }
+
+        return redirect()->route('operasional.proyek-disetujui.index')
+            ->with('sukses', 'Kebutuhan proyek berhasil dikirim ke owner untuk direview.');
     }
 }

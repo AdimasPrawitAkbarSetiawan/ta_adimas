@@ -58,14 +58,14 @@ class ProgresController extends Controller
         if ($request->persentase == 100) {
             $project->update(['status' => 'completed']);
 
-            // Notif proyek selesai ke semua owner & admin
             $owners = User::where('role', 'owner')->get();
             foreach ($owners as $owner) {
                 NotificationHelper::send(
                     $owner->id,
                     'Proyek Selesai 🎉',
                     "Proyek \"{$project->name}\" telah selesai 100%.",
-                    'completed'
+                    'completed',
+                    route('owner.monitoring.index')
                 );
             }
             $admins = User::where('role', 'admin')->get();
@@ -74,30 +74,33 @@ class ProgresController extends Controller
                     $admin->id,
                     'Proyek Selesai',
                     "Proyek \"{$project->name}\" telah selesai 100%.",
-                    'completed'
+                    'completed',
+                    route('admin.monitoring.index')
                 );
             }
         }
 
-        // Kirim email & notifikasi progres ke semua owner
+        // Notifikasi progres ke semua owner
         $owners = User::where('role', 'owner')->get();
         foreach ($owners as $owner) {
             NotificationHelper::send(
                 $owner->id,
                 'Update Progres Proyek 📊',
                 "Proyek \"{$project->name}\" diupdate ke {$request->persentase}%. Judul: {$request->judul}",
-                'progress'
+                'progress',
+                route('owner.monitoring.index')
             );
         }
 
-        // Kirim email & notifikasi ke klien
+        // Notifikasi ke klien
         $project->load('klien.user');
         if ($project->klien && $project->klien->user) {
             NotificationHelper::send(
                 $project->klien->user->id,
                 'Update Progres Proyek 📊',
                 "Proyek \"{$project->name}\" diupdate ke {$request->persentase}%. Judul: {$request->judul}",
-                'progress'
+                'progress',
+                route('klien.dashboard')
             );
         }
 
@@ -108,7 +111,8 @@ class ProgresController extends Controller
                 $admin->id,
                 'Update Progres Proyek',
                 "Operasional mengupdate progres proyek \"{$project->name}\" ke {$request->persentase}%.",
-                'progress'
+                'progress',
+                route('admin.monitoring.index')
             );
         }
 

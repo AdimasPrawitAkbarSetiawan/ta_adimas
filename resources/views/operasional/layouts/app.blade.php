@@ -6,6 +6,16 @@
     <title>@yield('title', 'Operasional') — SIMP-PRO</title>
     @vite(['resources/css/app.css'])
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @php
+    $appColor = \App\Models\Setting::get('app_color', '#3b5bdb');
+    @endphp
+    <style>
+        .nav-item.active { background: {{ $appColor }} !important; }
+        .icon-btn .badge { background: {{ $appColor }} !important; }
+        #chat-popup > div:first-child { background: {{ $appColor }} !important; }
+        .bg-blue-500 { background-color: {{ $appColor }} !important; }
+        input:focus, textarea:focus, select:focus { border-color: {{ $appColor }} !important; box-shadow: 0 0 0 2px {{ $appColor }}33 !important; }
+    </style>
     <style>
         * { font-family: 'Poppins', sans-serif; }
         body { background: #e8eaf0; }
@@ -261,7 +271,7 @@ function loadNotifications() {
     fetch('/notifications').then(r => r.json()).then(data => {
         const list = document.getElementById('notif-list');
         if (data.length === 0) { list.innerHTML = '<p class="text-center text-gray-400 text-xs py-6">Tidak ada notifikasi</p>'; return; }
-        list.innerHTML = data.map(n => `<div class="px-4 py-3 border-b border-gray-50 ${n.is_read ? '' : 'bg-blue-50'}"><p class="text-xs font-semibold text-gray-700">${n.title}</p><p class="text-xs text-gray-500 mt-0.5">${n.message}</p><p class="text-xs text-gray-400 mt-1">${new Date(n.created_at).toLocaleString('id-ID')}</p></div>`).join('');
+        list.innerHTML = data.map(n => `<div class="px-4 py-3 border-b border-gray-50 ${n.is_read ? '' : 'bg-blue-50'} ${n.url ? 'cursor-pointer hover:bg-gray-100' : ''}" ${n.url ? `onclick="window.location.href='${n.url}'"` : ''}><p class="text-xs font-semibold text-gray-700">${n.title}</p><p class="text-xs text-gray-500 mt-0.5">${n.message}</p><p class="text-xs text-gray-400 mt-1">${new Date(n.created_at).toLocaleString('id-ID')}</p>${n.url ? '<p class="text-xs text-blue-500 mt-1">Klik untuk lihat →</p>' : ''}</div>`).join('');
     });
 }
 
