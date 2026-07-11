@@ -113,9 +113,50 @@ class ProjectController extends Controller
         return view('marketing.form-revisi.show', compact('project'));
     }
 
+    /**
+     * Marketing memperbaiki data proyek (bukan sekadar ganti status)
+     * lalu mengirimkannya kembali ke Owner untuk direview ulang.
+     */
     public function kirimKembali(Request $request, Project $project)
     {
-        $project->update(['status' => 'review']);
+        $request->validate([
+            'name'            => 'required|string|max:255',
+            'description'     => 'required',
+            'budget_estimate' => 'required|numeric',
+            'foto'            => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+        ], [
+            'name.required'            => 'Judul proyek wajib diisi.',
+            'description.required'     => 'Deskripsi wajib diisi.',
+            'budget_estimate.required' => 'Estimasi anggaran wajib diisi.',
+        ]);
+
+        $project->update([
+            'name'            => $request->name,
+            'description'     => $request->description,
+            'budget_estimate' => $request->budget_estimate,
+            'location'        => $request->location,
+            'maps_link'       => $request->maps_link,
+            'other_info'      => $request->other_info,
+            'status'          => 'review',
+        ]);
+
+        // Kalau ada foto baru, simpan sebagai dokumentasi revisi
+        if ($request->hasFile('foto')) {
+            $progress = Projectprogress::create([
+                'project_id'     => $project->id,
+                'operational_id' => auth()->id(),
+                'title'          => 'Dokumentasi Revisi',
+                'description'    => 'Foto dokumentasi setelah perbaikan form pengajuan.',
+                'percentage'     => 0,
+            ]);
+
+            $path = $request->file('foto')->store('progress-photos', 'public');
+            Projectphoto::create([
+                'progress_id' => $progress->id,
+                'file_path'   => $path,
+                'caption'     => 'Dokumentasi revisi proyek',
+            ]);
+        }
 
         // Notif ke semua owner
         $owners = User::where('role', 'owner')->get();
@@ -123,7 +164,7 @@ class ProjectController extends Controller
             NotificationHelper::send(
                 $owner->id,
                 'Form Revisi Dikirim Kembali 🔄',
-                "Marketing telah mengirim kembali proyek \"{$project->name}\" setelah revisi untuk direview ulang.",
+                "Marketing telah memperbaiki dan mengirim kembali proyek \"{$project->name}\" untuk direview ulang.",
                 'review',
                 route('owner.form-pengajuan.index')
             );
@@ -135,14 +176,14 @@ class ProjectController extends Controller
             NotificationHelper::send(
                 $admin->id,
                 'Form Revisi Dikirim Kembali',
-                "Proyek \"{$project->name}\" telah dikirim kembali setelah revisi.",
+                "Proyek \"{$project->name}\" telah diperbaiki dan dikirim kembali setelah revisi.",
                 'review',
                 route('admin.monitoring.index')
             );
         }
 
         return redirect()->route('marketing.riwayat.index')
-            ->with('success', 'Form berhasil dikirim kembali untuk direview.');
+            ->with('success', 'Form berhasil diperbaiki dan dikirim kembali untuk direview.');
     }
 
     public function riwayat()

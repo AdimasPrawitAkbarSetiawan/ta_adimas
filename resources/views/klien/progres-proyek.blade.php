@@ -27,13 +27,23 @@
             <span class="text-gray-400">/</span>
             <span class="font-semibold text-gray-700 uppercase">{{ $project->name }}</span>
         </div>
-        <a href="{{ route('klien.dashboard') }}"
-           class="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            KEMBALI
-        </a>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('klien.progres.cetak', $project->id) }}"
+               target="_blank"
+               class="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                CETAK PDF
+            </a>
+            <a href="{{ route('klien.dashboard') }}"
+               class="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                KEMBALI
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-2 gap-6">

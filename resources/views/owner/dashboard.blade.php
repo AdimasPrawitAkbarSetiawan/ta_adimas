@@ -24,7 +24,7 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Total Disetujui</p>
             <p class="text-3xl font-bold text-gray-800">{{ $totalDisetujui }}</p>
-            <span class="text-xs text-green-500 font-medium mt-2 inline-block">{{ $totalDisetujui }} Form Selesai</span>
+            <a href="{{ route('owner.riwayat-keputusan.index') }}" class="text-xs text-green-500 font-medium mt-2 inline-block hover:underline">{{ $totalDisetujui }} Form Selesai</a>
         </div>
         <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
             <svg class="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

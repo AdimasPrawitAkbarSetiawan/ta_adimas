@@ -36,13 +36,13 @@ class Project extends Model
         return $this->hasOne(Projectdetail::class);
     }
 
-    public function progress()
-    {
-        return $this->hasMany(Projectprogress::class);
-    }
-
     public function latestProgress()
     {
         return $this->hasOne(Projectprogress::class)->latestOfMany();
     }
+
+    public function progress()
+{
+    return $this->hasMany(ProjectProgress::class)->orderBy('tanggal_laporan');
+}
 }

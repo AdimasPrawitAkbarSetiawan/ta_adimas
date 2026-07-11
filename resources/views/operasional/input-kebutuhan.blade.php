@@ -5,6 +5,24 @@
 
 @section('konten')
 
+@php
+    $catatanRevisi = $project->detail
+        ? $project->notes->where('type', 'revision_kebutuhan')->sortByDesc('created_at')->first()
+        : null;
+@endphp
+
+@if($catatanRevisi)
+<div class="bg-orange-50 border border-orange-200 rounded-2xl p-4 mb-4 flex items-start gap-3">
+    <svg class="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    <div>
+        <p class="text-sm font-semibold text-orange-700">Owner meminta revisi pada kebutuhan proyek ini</p>
+        <p class="text-xs text-orange-600 mt-1">{{ $catatanRevisi->note }}</p>
+    </div>
+</div>
+@endif
+
 <form method="POST" action="{{ route('operasional.input-kebutuhan.store', $project->id) }}">
 @csrf
 
@@ -224,7 +242,7 @@
     </a>
     <button type="submit"
             class="px-6 py-2 bg-green-500 text-white rounded-lg text-sm font-semibold hover:bg-green-600">
-        Simpan & Mulai Proyek
+        Simpan Kebutuhan
     </button>
 </div>
 

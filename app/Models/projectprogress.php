@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Projectprogress extends Model
+class ProjectProgress extends Model
 {
     protected $table = 'project_progress';
 
     protected $fillable = [
-        'project_id', 'operational_id',
-        'title', 'description', 'percentage', 'tanggal_laporan'
+        'project_id', 'operational_id', 'title', 'description', 'percentage', 'tanggal_laporan',
     ];
 
     public function project()
@@ -25,6 +24,6 @@ class Projectprogress extends Model
 
     public function photos()
     {
-        return $this->hasMany(Projectphoto::class, 'progress_id');
+        return $this->hasMany(ProgressPhoto::class, 'progress_id');
     }
 }

@@ -14,8 +14,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 });
 
-
-
 Route::post('/logout', [AuthController::class, 'logout'])
      ->middleware('auth')
      ->name('logout');
@@ -56,12 +54,12 @@ Route::middleware(['auth', 'role:owner'])
     Route::get('/riwayat-keputusan', [\App\Http\Controllers\Owner\RiwayatKeputusanController::class, 'index'])->name('riwayat-keputusan.index');
     Route::get('/riwayat-keputusan/{project}', [\App\Http\Controllers\Owner\RiwayatKeputusanController::class, 'show'])->name('riwayat-keputusan.show');
     Route::get('/kebutuhan/{project}',         [\App\Http\Controllers\Owner\KebutuhanController::class, 'show'])->name('kebutuhan.show');
-Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
-Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
-Route::get('/kebutuhan',                    [\App\Http\Controllers\Owner\KebutuhanController::class, 'index'])->name('kebutuhan.index');
-Route::get('/kebutuhan/{project}',          [\App\Http\Controllers\Owner\KebutuhanController::class, 'show'])->name('kebutuhan.show');
-Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
-Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
+    Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
+    Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
+    Route::get('/kebutuhan',                    [\App\Http\Controllers\Owner\KebutuhanController::class, 'index'])->name('kebutuhan.index');
+    Route::get('/kebutuhan/{project}',          [\App\Http\Controllers\Owner\KebutuhanController::class, 'show'])->name('kebutuhan.show');
+    Route::post('/kebutuhan/{project}/approve', [\App\Http\Controllers\Owner\KebutuhanController::class, 'approve'])->name('kebutuhan.approve');
+    Route::post('/kebutuhan/{project}/revisi',  [\App\Http\Controllers\Owner\KebutuhanController::class, 'revisi'])->name('kebutuhan.revisi');
 });
 
 Route::middleware(['auth', 'role:marketing'])
@@ -83,6 +81,7 @@ Route::middleware(['auth', 'role:operasional'])
      ->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Operasional\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/proyek-disetujui', [\App\Http\Controllers\Operasional\ProyekController::class, 'disetujui'])->name('proyek-disetujui.index');
+    Route::get('/kebutuhan-direvisi', [\App\Http\Controllers\Operasional\ProyekController::class, 'kebutuhanDirevisi'])->name('kebutuhan-direvisi.index');
     Route::get('/proyek-berjalan', [\App\Http\Controllers\Operasional\ProyekController::class, 'berjalan'])->name('proyek-berjalan.index');
     Route::get('/input-kebutuhan/{project}', [\App\Http\Controllers\Operasional\ProyekController::class, 'inputKebutuhan'])->name('input-kebutuhan.show');
     Route::post('/input-kebutuhan/{project}', [\App\Http\Controllers\Operasional\ProyekController::class, 'simpanKebutuhan'])->name('input-kebutuhan.store');
@@ -96,6 +95,7 @@ Route::middleware(['auth', 'role:klien'])
      ->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\Klien\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/progres-proyek/{project}', [\App\Http\Controllers\Klien\DashboardController::class, 'show'])->name('progres.show');
+    Route::get('/progres-proyek/{project}/cetak', [\App\Http\Controllers\Klien\DashboardController::class, 'cetakProgress'])->name('progres.cetak');
 });
 
 Route::middleware('auth')->group(function () {

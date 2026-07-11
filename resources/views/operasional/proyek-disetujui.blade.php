@@ -39,29 +39,19 @@
                     </td>
                     <td class="px-4 py-3 text-gray-500 text-xs">{{ $proyek->location ?? '-' }}</td>
                     <td class="px-4 py-3">
-                        @if($proyek->status === 'pending_detail')
-                            <span class="bg-orange-100 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full">Menunggu Review Owner</span>
-                        @else
-                            <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Disetujui</span>
-                        @endif
+                        <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Disetujui</span>
                     </td>
                     <td class="px-4 py-3 text-gray-500 text-xs">{{ \Carbon\Carbon::parse($proyek->created_at)->format('d-m-Y') }}</td>
                     <td class="px-4 py-3">
-                        @if($proyek->status === 'pending_detail')
-                            <span class="bg-gray-100 text-gray-400 text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
-                                Menunggu Persetujuan
-                            </span>
-                        @else
-                            <a href="{{ route('operasional.input-kebutuhan.show', $proyek->id) }}"
-                               class="bg-purple-100 text-purple-600 text-xs font-semibold px-3 py-1 rounded-full hover:bg-purple-200 whitespace-nowrap">
-                                Input Kebutuhan Proyek
-                            </a>
-                        @endif
+                        <a href="{{ route('operasional.input-kebutuhan.show', $proyek->id) }}"
+                           class="bg-purple-100 text-purple-600 text-xs font-semibold px-3 py-1 rounded-full hover:bg-purple-200 whitespace-nowrap">
+                            Input Kebutuhan Proyek
+                        </a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center py-8 text-gray-400">Belum ada proyek yang disetujui.</td>
+                    <td colspan="5" class="text-center py-8 text-gray-400">Belum ada proyek baru yang disetujui.</td>
                 </tr>
                 @endforelse
             </tbody>

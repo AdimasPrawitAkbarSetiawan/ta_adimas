@@ -9,15 +9,33 @@ use Illuminate\Http\Request;
 
 class ProyekController extends Controller
 {
-public function disetujui()
-{
-    $daftar = Project::with(['klien.user', 'marketing'])
-                     ->whereIn('status', ['approved', 'pending_detail'])
-                     ->orderBy('created_at', 'desc')
-                     ->get();
+    /**
+     * Proyek yang baru disetujui Owner dan BELUM pernah diisi kebutuhannya.
+     */
+    public function disetujui()
+    {
+        $daftar = Project::with(['klien.user', 'marketing'])
+            ->where('status', 'approved')
+            ->whereDoesntHave('detail')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('operasional.proyek-disetujui', compact('daftar'));
-}
+        return view('operasional.proyek-disetujui', compact('daftar'));
+    }
+
+    /**
+     * Proyek yang kebutuhannya sudah pernah diisi, tapi dikembalikan
+     * Owner untuk direvisi (status balik ke 'approved' tapi detail sudah ada).
+     */
+    public function kebutuhanDirevisi()
+    {
+        $daftar = Project::with(['klien.user', 'marketing', 'detail'])
+            ->where('status', 'revision_detail')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return view('operasional.kebutuhan-direvisi', compact('daftar'));
+    }
 
     public function berjalan()
     {
@@ -31,7 +49,7 @@ public function disetujui()
 
     public function inputKebutuhan(Project $project)
     {
-        $project->load(['klien.user', 'detail']);
+        $project->load(['klien.user', 'detail', 'notes']);
         return view('operasional.input-kebutuhan', compact('project'));
     }
 

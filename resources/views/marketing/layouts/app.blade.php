@@ -9,12 +9,17 @@
     @php
     $appColor = \App\Models\Setting::get('app_color', '#3b5bdb');
     @endphp
+<style>
+        :root {
+            --app-color: {{ $appColor }};
+        }
+    </style>
     <style>
-.nav-item.active { background: {{ $appColor }} !important; }
-.icon-btn .badge { background: {{ $appColor }} !important; }
-#chat-popup > div:first-child { background: {{ $appColor }} !important; }
-.bg-blue-500 { background-color: {{ $appColor }} !important; }
-input:focus, textarea:focus, select:focus { border-color: {{ $appColor }} !important; box-shadow: 0 0 0 2px {{ $appColor }}33 !important; }
+        .nav-item.active { background: var(--app-color) !important; }
+        .icon-btn .badge { background: var(--app-color) !important; }
+        #chat-popup > div:first-child { background: var(--app-color) !important; }
+        .bg-blue-500 { background-color: var(--app-color) !important; }
+        input:focus, textarea:focus, select:focus { border-color: var(--app-color) !important; box-shadow: 0 0 0 2px var(--app-color) !important; }
     </style>
     <style>
         * { font-family: 'Poppins', sans-serif; }

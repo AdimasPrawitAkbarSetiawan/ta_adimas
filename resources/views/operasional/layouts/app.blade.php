@@ -9,12 +9,17 @@
     @php
     $appColor = \App\Models\Setting::get('app_color', '#3b5bdb');
     @endphp
+   <style>
+        :root {
+            --app-color: {{ $appColor }};
+        }
+    </style>
     <style>
-        .nav-item.active { background: {{ $appColor }} !important; }
-        .icon-btn .badge { background: {{ $appColor }} !important; }
-        #chat-popup > div:first-child { background: {{ $appColor }} !important; }
-        .bg-blue-500 { background-color: {{ $appColor }} !important; }
-        input:focus, textarea:focus, select:focus { border-color: {{ $appColor }} !important; box-shadow: 0 0 0 2px {{ $appColor }}33 !important; }
+        .nav-item.active { background: var(--app-color) !important; }
+        .icon-btn .badge { background: var(--app-color) !important; }
+        #chat-popup > div:first-child { background: var(--app-color) !important; }
+        .bg-blue-500 { background-color: var(--app-color) !important; }
+        input:focus, textarea:focus, select:focus { border-color: var(--app-color) !important; box-shadow: 0 0 0 2px var(--app-color) !important; }
     </style>
     <style>
         * { font-family: 'Poppins', sans-serif; }
@@ -177,6 +182,12 @@
        class="nav-item {{ request()->routeIs('operasional.proyek-disetujui.*') || request()->routeIs('operasional.input-kebutuhan.*') ? 'active' : '' }}">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         Proyek Disetujui
+    </a>
+
+    <a href="{{ route('operasional.kebutuhan-direvisi.index') }}"
+       class="nav-item {{ request()->routeIs('operasional.kebutuhan-direvisi.*') ? 'active' : '' }}">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        Kebutuhan Direvisi
     </a>
 
     <a href="{{ route('operasional.proyek-berjalan.index') }}"
